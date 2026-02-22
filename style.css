@@ -1,0 +1,113 @@
+/* =========================
+   GLOBAL STYLE
+========================= */
+
+body {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* =========================
+   BUTTON STYLE
+========================= */
+
+.btn-success {
+    background-color: #1cc88a;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #17a673;
+}
+
+.btn-warning {
+    color: white;
+}
+
+.btn-danger {
+    background-color: #e74a3b;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* =========================
+   TABLE STYLE
+========================= */
+
+table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table th {
+    background-color: #4e73df;
+    color: white;
+    text-align: center;
+}
+
+table td {
+    vertical-align: middle;
+}
+
+/* =========================
+   FORM STYLE
+========================= */
+
+input.form-control {
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    transition: 0.3s;
+}
+
+input.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 10px rgba(78,115,223,0.3);
+}
+
+/* =========================
+   SEARCH BOX
+========================= */
+
+input[name="search"] {
+    border-radius: 50px;
+    padding-left: 20px;
+}
+
+/* =========================
+   CARD EFFECT
+========================= */
+
+.card-custom {
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    padding: 20px;
+}
+
+.card {
+    animation: fadeIn 0.7s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(-10px);}
+    to {opacity:1; transform: translateY(0);}
+}
