@@ -106,6 +106,9 @@ body {
 
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li><a class="dropdown-item" href="profil.php">
+    <i class="fa fa-user"></i> Profil
+</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="#" onclick="confirmLogout()">
                     <i class="fa fa-sign-out-alt"></i> Logout

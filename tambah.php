@@ -48,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$npm, $nama, $jurusan, $email, $fotoName]);
 
+            require 'log_activity.php';
+logActivity($pdo, $_SESSION['user'], "Menambahkan mahasiswa: $nama");
+
             echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({

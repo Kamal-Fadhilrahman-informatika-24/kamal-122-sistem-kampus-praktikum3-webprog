@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $fotoName = $data['foto']; // default pakai foto lama
 
+    require 'log_activity.php';
+logActivity($pdo, $_SESSION['user'], "Menambahkan mahasiswa: $nama");
+
     // ===== PROSES UPLOAD FOTO BARU =====
     if (!empty($_FILES['foto']['name'])) {
 

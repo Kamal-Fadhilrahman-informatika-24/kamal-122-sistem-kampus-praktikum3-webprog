@@ -1,5 +1,7 @@
 <?php
 require 'config/connection.php';
+require 'log_activity.php';
+logActivity($pdo, $_SESSION['user'], "Menghapus mahasiswa ID: $id");
 
 $stmt = $pdo->prepare("SELECT foto FROM mahasiswa WHERE id=?");
 $stmt->execute([$id]);
