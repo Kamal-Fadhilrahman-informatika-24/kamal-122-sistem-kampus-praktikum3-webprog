@@ -128,35 +128,51 @@ body {
         </div>
 
         <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>NPM</th>
-                    <th>Nama</th>
-                    <th>Jurusan</th>
-                    <th>Email</th>
-                    <th width="150">Aksi</th>
-                </tr>
-            </thead>
+                    <thead class="table-dark">
+            <tr>
+                <th>NPM</th>
+                <th>Nama</th>
+                <th>Jurusan</th>
+                <th>Email</th>
+                <th>Foto</th>
+                <th width="150">Aksi</th>
+            </tr>
+        </thead>
             <tbody>
-                <?php foreach($data as $row): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['npm']); ?></td>
-                    <td><?= htmlspecialchars($row['nama']); ?></td>
-                    <td><?= htmlspecialchars($row['jurusan']); ?></td>
-                    <td><?= htmlspecialchars($row['email']); ?></td>
-                    <td>
-                        <a href="edit.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">
-                            <i class="fa fa-edit"></i>
-                        </a>
+<?php foreach($data as $row): ?>
+<tr>
+    <td><?= htmlspecialchars($row['npm']); ?></td>
+    <td><?= htmlspecialchars($row['nama']); ?></td>
+    <td><?= htmlspecialchars($row['jurusan']); ?></td>
+    <td><?= htmlspecialchars($row['email']); ?></td>
 
-                        <button class="btn btn-danger btn-sm"
-                                onclick="confirmDelete(<?= $row['id']; ?>)">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
+    <td>
+<?php
+if (!empty($row['foto']) && file_exists('uploads/' . $row['foto'])) {
+    echo '<img src="uploads/'.$row['foto'].'"
+          width="60"
+          height="60"
+          style="object-fit:cover;border-radius:8px;cursor:pointer;"
+          onclick="previewImage(\'uploads/'.$row['foto'].'\')">';
+} else {
+    echo '<span class="text-muted">-</span>';
+}
+?>
+</td>
+
+    <td>
+        <a href="edit.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">
+            <i class="fa fa-edit"></i>
+        </a>
+
+        <button class="btn btn-danger btn-sm"
+                onclick="confirmDelete(<?= $row['id']; ?>)">
+            <i class="fa fa-trash"></i>
+        </button>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
         </table>
 
     </div>
@@ -166,6 +182,17 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+function previewImage(src) {
+    Swal.fire({
+        imageUrl: src,
+        imageWidth: 400,
+        imageAlt: 'Foto Mahasiswa',
+        showConfirmButton: false,
+        showCloseButton: true,
+        background: '#f4f6f9'
+    });
+}
+
 function confirmLogout() {
     Swal.fire({
         title: 'Yakin ingin logout?',

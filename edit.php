@@ -22,7 +22,6 @@ if (!$data) {
     die("Data tidak ditemukan");
 }
 
-// Jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $npm = $_POST['npm'];
@@ -30,17 +29,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jurusan = $_POST['jurusan'];
     $email = $_POST['email'];
 
-    $sql = "UPDATE mahasiswa SET npm=?, nama=?, jurusan=?, email=? WHERE id=?";
+    $fotoName = $data['foto']; // default pakai foto lama
+
+    // ===== PROSES UPLOAD FOTO BARU =====
+    if (!empty($_FILES['foto']['name'])) {
+
+        $file = $_FILES['foto'];
+        $allowed = ['jpg','jpeg','png'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        if (in_array($ext, $allowed)) {
+
+            $fotoName = time() . '_' . uniqid() . '.' . $ext;
+
+            if (!is_dir('uploads')) {
+                mkdir('uploads', 0777, true);
+            }
+
+            if (move_uploaded_file($file['tmp_name'], 'uploads/' . $fotoName)) {
+
+                // hapus foto lama kalau ada
+                if (!empty($data['foto']) && file_exists('uploads/' . $data['foto'])) {
+                    unlink('uploads/' . $data['foto']);
+                }
+
+            } else {
+                die("Gagal upload file.");
+            }
+
+        } else {
+            die("Format file harus jpg, jpeg, atau png.");
+        }
+    }
+
+    $sql = "UPDATE mahasiswa SET npm=?, nama=?, jurusan=?, email=?, foto=? WHERE id=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$npm, $nama, $jurusan, $email, $id]);
+    $stmt->execute([$npm, $nama, $jurusan, $email, $fotoName, $id]);
 
     echo "<script>
         document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: 'Data mahasiswa berhasil diperbarui',
-                confirmButtonColor: '#3085d6'
+                text: 'Data mahasiswa berhasil diperbarui'
             }).then(() => {
                 window.location = 'mahasiswa.php';
             });
@@ -146,7 +177,7 @@ body {
 
     <div class="form-card">
 
-        <form method="POST">
+       <form method="POST" enctype="multipart/form-data">
 
             <div class="row">
 
@@ -173,6 +204,19 @@ body {
                     <input type="email" name="email" class="form-control"
                            value="<?= htmlspecialchars($data['email']); ?>">
                 </div>
+
+                <div class="col-md-6 mb-3">
+    <label>Foto</label><br>
+
+    <?php if (!empty($data['foto']) && file_exists('uploads/' . $data['foto'])): ?>
+        <img src="uploads/<?= $data['foto']; ?>" 
+             width="100" 
+             style="border-radius:8px; margin-bottom:10px;">
+        <br>
+    <?php endif; ?>
+
+    <input type="file" name="foto" class="form-control" accept="image/*">
+</div>
 
             </div>
 

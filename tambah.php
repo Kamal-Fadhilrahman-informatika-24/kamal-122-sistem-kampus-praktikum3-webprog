@@ -14,26 +14,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jurusan = $_POST['jurusan'];
     $email = $_POST['email'];
 
-    try {
-        $sql = "INSERT INTO mahasiswa (npm, nama, jurusan, email) VALUES (?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$npm, $nama, $jurusan, $email]);
+    $fotoName = null;
 
-        echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data mahasiswa berhasil ditambahkan',
-                    confirmButtonColor: '#3085d6'
-                }).then(() => {
-                    window.location = 'mahasiswa.php';
+    // ===== PROSES UPLOAD FOTO =====
+    if (!empty($_FILES['foto']['name'])) {
+
+        $file = $_FILES['foto'];
+        $allowed = ['jpg','jpeg','png'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        if (in_array($ext, $allowed)) {
+
+            $fotoName = time() . '_' . uniqid() . '.' . $ext;
+
+            // pastikan folder uploads ada
+            if (!is_dir('uploads')) {
+                mkdir('uploads', 0777, true);
+            }
+
+            if (!move_uploaded_file($file['tmp_name'], 'uploads/' . $fotoName)) {
+                die("Gagal upload file.");
+            }
+
+        } else {
+            $error = "Format file harus jpg, jpeg, atau png.";
+        }
+    }
+
+    if (!isset($error)) {
+
+        try {
+            $sql = "INSERT INTO mahasiswa (npm, nama, jurusan, email, foto) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$npm, $nama, $jurusan, $email, $fotoName]);
+
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Data mahasiswa berhasil ditambahkan'
+                    }).then(() => {
+                        window.location = 'mahasiswa.php';
+                    });
                 });
-            });
-        </script>";
+            </script>";
 
-    } catch (PDOException $e) {
-        $error = $e->getMessage();
+        } catch (PDOException $e) {
+            $error = $e->getMessage();
+        }
     }
 }
 ?>
@@ -139,7 +168,7 @@ body {
             <div class="alert alert-danger"><?= $error ?></div>
         <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
 
             <div class="row">
 
@@ -162,6 +191,11 @@ body {
                     <label>Email</label>
                     <input type="email" name="email" class="form-control">
                 </div>
+
+                <div class="col-md-6 mb-3">
+    <label>Foto</label>
+    <input type="file" name="foto" class="form-control" accept="image/*">
+</div>
 
             </div>
 
