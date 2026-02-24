@@ -5,8 +5,8 @@ ini_set('display_errors', 1);
 
 $host = "localhost";
 $dbname = "kampus";
-$username = "root";
-$password = "";
+$username = "kampususer";
+$password = "password123";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
